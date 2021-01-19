@@ -74,7 +74,7 @@ if (!options.action || !['encrypt', 'decrypt', 'help', 'diff-file', 'diff-list']
 if (options.action === 'help') {
   console.log(usage);
 
-  process.exit(1);
+  process.exit(0);
 }
 
 const args = [options.action];
