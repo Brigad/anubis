@@ -58,11 +58,13 @@ export const diffFile = async (file, writeOutput = false) => {
   return file;
 };
 
-export const diffList = async (root) => {
-  const encryptedFiles = await glob([`${root}/packages/**/src/config/**.config.ts.encrypted`], {
+export const diffList = async (pattern: string) => {
+  const encryptedFiles = await glob([pattern.endsWith('.config.ts') ? + pattern + '.encrypted' : pattern], {
     onlyFiles: true,
   });
-  const files = await glob([`${root}/packages/**/src/config/**.config.ts`], {
+  const files = await glob([
+    pattern.endsWith('.config.ts.encrypted') ? pattern.replace(/\.encrypted$/, '') : pattern
+  ], {
     onlyFiles: true,
   });
   const toEncryptFiles = files.filter((f) => !encryptedFiles.includes(`${f}.encrypted`));

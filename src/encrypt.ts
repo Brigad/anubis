@@ -44,8 +44,8 @@ export const encryptFile = async (file: string, keyId: string) => {
   return file;
 };
 
-export const encryptAll = async (root: string, keyId: string) => {
-  const files = await glob([`${root}/**/**.config.ts`], {
+export const encryptAll = async (pattern: string, keyId: string) => {
+  const files = await glob([pattern.endsWith('.config.ts.encrypted') ? pattern.replace(/\.encrypted$/, '') : pattern], {
     onlyFiles: true,
   });
 

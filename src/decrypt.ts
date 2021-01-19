@@ -41,8 +41,8 @@ export const decryptFile = async (file: string, returnContent = false) => {
   return file;
 };
 
-export const decryptAll = async (root) => {
-  const files = await glob([`${root}/packages/**/src/config/**.config.ts.encrypted`], {
+export const decryptAll = async (pattern: string) => {
+  const files = await glob([pattern.endsWith('.config.ts') ? + pattern + '.encrypted' : pattern], {
     onlyFiles: true,
   });
 
