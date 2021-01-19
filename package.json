@@ -22,16 +22,22 @@
     "aws-kms-thingy": "^2.0.0",
     "aws-sdk": "^2.828.0",
     "colors": "^1.4.0",
+    "command-line-args": "^5.1.1",
     "diff": "^5.0.0",
     "fast-glob": "3.2.4"
   },
   "devDependencies": {
+    "@types/command-line-args": "^5.0.0",
+    "@types/diff": "^5.0.0",
     "@types/lodash": "^4.14.161",
     "@types/node": "^12.12.14",
     "@typescript-eslint/eslint-plugin": "^2.13.0",
     "@typescript-eslint/parser": "^2.13.0",
     "@zeit/ncc": "^0.22.1",
     "eslint": "^6.8.0",
+    "eslint-config-prettier": "6.15.0",
+    "eslint-plugin-prettier": "3.1.4",
+    "prettier": "npm:@brigad/prettier",
     "typescript": "^3.7.3"
   }
 }
