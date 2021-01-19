@@ -1,20 +1,24 @@
 #!/usr/bin/env node
-
 /* eslint-disable no-empty */
-require('colors');
 
-const { encrypt, decrypt } = require('aws-kms-thingy');
-const crypto = require('crypto');
-const glob = require('fast-glob');
-const fs = require('fs');
-const Diff = require('diff');
+import 'colors';
+
+import { encrypt, decrypt } from 'aws-kms-thingy';
+
+import crypto from 'crypto';
+
+import glob from 'fast-glob';
+
+import fs from 'fs';
+
+import { Diff } from 'diff';
 
 const AES_ALGORITHM = 'aes-256-ctr';
 
 const decryptFile = async (file, returnContent = false) => {
-  const content = JSON.parse(fs.readFileSync(file));
+  const content = JSON.parse(fs.readFileSync(file).toString());
 
-  const decrypted = await decrypt(content.key);
+  const decrypted = await decrypt(content.key as string);
 
   const key = Buffer.from(decrypted, 'hex');
   const iv = Buffer.from(content.iv, 'hex');
@@ -51,7 +55,7 @@ const encryptFile = async (file) => {
   const { AWS_KEY_ID } = process.env;
 
   if (!AWS_KEY_ID) {
-    console.error(`$AWS_KEY_ID IS REQUIRED !`.colors.red);
+    console.error(`$AWS_KEY_ID IS REQUIRED !`.red);
     return file;
   }
 
@@ -200,7 +204,7 @@ const main = async () => {
   if (!action || action === 'help' || !Object.keys(actions).includes(action)) {
     console.log(
       `
-      ${'USAGE'.bold} : yarn brypt ${Object.keys(actions).join('|')} [file]
+      ${'USAGE'.bold} : yarn anubis ${Object.keys(actions).join('|')} [file]
     `,
     );
     return;
