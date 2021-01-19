@@ -47,14 +47,6 @@ export const errorOption = (error: string) => {
   process.exit(1);
 };
 
-export enum ActionEnum {
-  encrypt = 'encrypt',
-  decrypt = 'decrypt',
-  diff_file = 'diff-file',
-  diff_list = 'diff-list',
-  'help' = 'help',
-}
-
 const argsDef: commandArgs.OptionDefinition[] = [
   { name: 'config-pattern', alias: 'c', type: String },
   { name: 'config-file', alias: 'f', type: String },
@@ -79,7 +71,7 @@ if (!options.action || !['encrypt', 'decrypt', 'help', 'diff-file', 'diff-list']
   errorOption('invalid command');
 }
 
-if (options.action === ActionEnum.help) {
+if (options.action === 'help') {
   console.log(usage);
 
   process.exit(1);
@@ -87,7 +79,7 @@ if (options.action === ActionEnum.help) {
 
 const args = [options.action];
 
-if (options.action !== ActionEnum.diff_file) {
+if (options.action !== 'diff-file') {
   const config = options['config-pattern'] || process.env.ANUBIS_CONFIG_PATTERN;
     
   if (!config) {
@@ -96,7 +88,7 @@ if (options.action !== ActionEnum.diff_file) {
 
   args.push(config);
 
-  if (options.action === ActionEnum.encrypt) {
+  if (options.action === 'encrypt') {
     const key = options['aws-kms-key-id'] || process.env.ANUBIS_AWS_KMS_KEY_ID;
     
     if (!key) {
