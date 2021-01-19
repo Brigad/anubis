@@ -54,7 +54,7 @@ const encryptFile = async (file) => {
 
   if (!AWS_KEY_ID) {
     console.error(`$AWS_KEY_ID IS REQUIRED !`.red);
-    return file;
+    return null;
   }
 
   const content = fs.readFileSync(file);
@@ -92,6 +92,13 @@ const encryptFile = async (file) => {
 };
 
 const encryptAll = async (root) => {
+  const { AWS_KEY_ID } = process.env;
+
+  if (!AWS_KEY_ID) {
+    console.error(`$AWS_KEY_ID IS REQUIRED !`.red);
+    return null;
+  }
+
   const files = await glob([`${root}/packages/**/src/config/**.config.ts`], {
     onlyFiles: true,
   });
