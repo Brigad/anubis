@@ -1,0 +1,32 @@
+{
+  "name": "anubis",
+  "version": "1.0.0",
+  "description": "encrypt/decrypt",
+  "main": "src/main.js",
+  "repository": "https://github.com/Brigad/anubis",
+  "author": "Grisha GHUKASYAN <grisha@brigad.co>",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "src"
+  ],
+  "bin": {
+    "anubis": "src/main.js"
+  },
+  "dependencies": {
+    "aws-kms-thingy": "^2.0.0",
+    "aws-sdk": "^2.828.0",
+    "colors": "^1.4.0",
+    "diff": "^5.0.0",
+    "fast-glob": "3.2.4"
+  },
+  "devDependencies": {
+    "babel-eslint": "10.1.0",
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb-base": "14.2.0",
+    "eslint-config-prettier": "6.15.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "prettier": "npm:@brigad/prettier"
+  }
+}
