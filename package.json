@@ -1,7 +1,7 @@
 {
-  "name": "anubis",
+  "name": "@brigad/anubis",
   "version": "1.0.0",
-  "description": "encrypt/decrypt",
+  "description": "encrypt/decrypt files with aws ksm & crypto",
   "main": "src/main.js",
   "repository": "https://github.com/Brigad/anubis",
   "author": "Grisha GHUKASYAN <grisha@brigad.co>",
