@@ -50,10 +50,10 @@ const decryptFile = async (file, returnContent = false) => {
 };
 
 const encryptFile = async (file) => {
-  const { AWS_KEY_ID } = process.env;
+  const { AWS_KMS_KEY_ID } = process.env;
 
-  if (!AWS_KEY_ID) {
-    console.error(`$AWS_KEY_ID IS REQUIRED !`.red);
+  if (!AWS_KMS_KEY_ID) {
+    console.error(`$AWS_KMS_KEY_ID IS REQUIRED !`.red);
     return null;
   }
 
@@ -73,7 +73,7 @@ const encryptFile = async (file) => {
 
   const encryptedKey = await encrypt({
     plaintext: key.toString('hex'),
-    keyId: AWS_KEY_ID,
+    keyId: AWS_KMS_KEY_ID,
   });
 
   const buffer = aes.update(content.toString());
@@ -92,10 +92,10 @@ const encryptFile = async (file) => {
 };
 
 const encryptAll = async (root) => {
-  const { AWS_KEY_ID } = process.env;
+  const { AWS_KMS_KEY_ID } = process.env;
 
-  if (!AWS_KEY_ID) {
-    console.error(`$AWS_KEY_ID IS REQUIRED !`.red);
+  if (!AWS_KMS_KEY_ID) {
+    console.error(`$AWS_KMS_KEY_ID IS REQUIRED !`.red);
     return null;
   }
 
