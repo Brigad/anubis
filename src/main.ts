@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable no-empty */
-
-import 'colors';
 
 import { encrypt, decrypt } from 'aws-kms-thingy';
 
@@ -12,6 +9,8 @@ import glob from 'fast-glob';
 import fs from 'fs';
 
 import { Diff } from 'diff';
+
+import 'colors';
 
 const AES_ALGORITHM = 'aes-256-ctr';
 
