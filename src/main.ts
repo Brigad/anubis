@@ -43,7 +43,6 @@ const decryptFile = async (file, returnContent = false) => {
     if (existingContent.toString() === decryptedContent) {
       return null;
     }
-    // eslint-disable-next-line prettier/prettier
   } catch { }
 
   fs.writeFileSync(targetFile, decryptedContent);
@@ -67,7 +66,6 @@ const encryptFile = async (file) => {
     if (content.toString() === decryptedContent) {
       return null;
     }
-    // eslint-disable-next-line prettier/prettier
   } catch { }
   const key = Buffer.from(crypto.randomBytes(32));
   const iv = Buffer.from(crypto.randomBytes(16));
@@ -131,7 +129,6 @@ const diffFile = async (file, writeOutput = false) => {
   let decryptedContent = null;
   try {
     decryptedContent = await decryptFile(file, true);
-    // eslint-disable-next-line prettier/prettier
   } catch { }
 
   const targetFile = file.replace(/\.encrypted$/, '');
@@ -155,7 +152,6 @@ const diffFile = async (file, writeOutput = false) => {
       return null;
     }
 
-    // eslint-disable-next-line prettier/prettier
   } catch { }
 
   if (writeOutput) {
