@@ -3,7 +3,7 @@ import commandArgs from 'command-line-args';
 import 'colors';
 
 const usage = `
-  ${'anubis'.bgWhite.black} (encrypt | decrypt | diff-file | diff-list | help)
+  ${'anubis'.green}
 
   ${'encrypt'.green} : encrypt all new/updated configuration files
       ${'--config-pattern'.grey} | ${'-p'.grey} | ${
@@ -65,16 +65,14 @@ try {
 
 const options = foundOptions;
 
-console.log(options);
-
-if (!options.action || !['encrypt', 'decrypt', 'help', 'diff-file', 'diff-list'].includes(options.action)) {
-  errorOption('invalid command');
-}
-
-if (options.action === 'help') {
+if (!options.action || options.action === 'help') {
   console.log(usage);
 
   process.exit(0);
+}
+
+if (!['encrypt', 'decrypt', 'help', 'diff-file', 'diff-list'].includes(options.action)) {
+  errorOption('invalid command');
 }
 
 const args = [options.action];
