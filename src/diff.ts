@@ -14,7 +14,7 @@ const printDiff = (contentA, contentB) => {
   console.log();
 };
 
-export const diffFile = async (file, writeOutput = false) => {
+export const diffFile = async (file, writeOutput = true) => {
   if (!file.endsWith('.encrypted')) {
     file = file + '.encrypted';
   }
@@ -69,7 +69,7 @@ export const diffList = async (pattern: string) => {
   });
   const toEncryptFiles = files.filter((f) => !encryptedFiles.includes(`${f}.encrypted`));
 
-  const diff = (await Promise.all(encryptedFiles.map((f) => diffFile(f)))).filter((e) => !!e);
+  const diff = (await Promise.all(encryptedFiles.map((f) => diffFile(f, false)))).filter((e) => !!e);
 
   diff.map((e) => console.log(`${'Updated'.cyan} => ${e.replace(/\.encrypted$/, '')}`));
   toEncryptFiles.map((e) => console.log(`${'New'.green} => ${e}`));
