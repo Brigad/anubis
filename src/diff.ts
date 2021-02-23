@@ -59,11 +59,11 @@ export const diffFile = async (file, writeOutput = true) => {
 };
 
 export const diffList = async (pattern: string) => {
-  const encryptedFiles = await glob([pattern.endsWith('.config.ts') ? pattern + '.encrypted' : pattern], {
+  const encryptedFiles = await glob([pattern.endsWith('.encrypted') ? pattern : pattern + '.encrypted'], {
     onlyFiles: true,
   });
   const files = await glob([
-    pattern.endsWith('.config.ts.encrypted') ? pattern.replace(/\.encrypted$/, '') : pattern
+    pattern.endsWith('.encrypted') ? pattern.replace(/\.encrypted$/, '') : pattern
   ], {
     onlyFiles: true,
   });
