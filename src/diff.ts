@@ -58,13 +58,13 @@ export const diffFile = async (file, writeOutput = true) => {
   return file;
 };
 
-export const diffList = async (pattern: string) => {
-  const encryptedFiles = await glob([pattern.endsWith('.encrypted') ? pattern : pattern + '.encrypted'], {
+export const diffList = async (patterns: string) => {
+  const encryptedFiles = await glob(patterns.split(',').map(p => p.endsWith('.encrypted') ? p : p + '.encrypted'), {
     onlyFiles: true,
   });
-  const files = await glob([
-    pattern.endsWith('.encrypted') ? pattern.replace(/\.encrypted$/, '') : pattern
-  ], {
+  const files = await glob(patterns.split(',').map(p =>
+    p.endsWith('.encrypted') ? p.replace(/\.encrypted$/, '') : p)
+  , {
     onlyFiles: true,
   });
   const toEncryptFiles = files.filter((f) => !encryptedFiles.includes(`${f}.encrypted`));

@@ -19,7 +19,7 @@ const usage = `
   ${'diff-list'.green} : lists all configuration files that differ from the encrypted file
       ${'--config-pattern'.grey} | ${'-p'.grey} | ${
   '$ANUBIS_CONFIG_PATTERN'.grey
-} - configuration files pattern (eg: ./packages/**/**.config.ts)
+} - configuration files patterns separated by commas (eg: './packages/**/**.config.ts,./main.json')
 
   ${'diff-file'.green} : displays the differences between the encrypted and the original file
       ${'--config-file'.grey} | ${
@@ -48,7 +48,7 @@ export const errorOption = (error: string) => {
 };
 
 const argsDef: commandArgs.OptionDefinition[] = [
-  { name: 'config-pattern', alias: 'c', type: String },
+  { name: 'config-pattern', alias: 'p', type: String },
   { name: 'config-file', alias: 'f', type: String },
   { name: 'aws-kms-key-id', alias: 'k', type: String },
   { name: 'action', alias: 'a', type: String, defaultOption: true },

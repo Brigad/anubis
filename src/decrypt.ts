@@ -41,8 +41,8 @@ export const decryptFile = async (file: string, returnContent = false) => {
   return file;
 };
 
-export const decryptAll = async (pattern: string) => {
-  const files = await glob([pattern.endsWith('.encrypted') ? pattern : pattern + '.encrypted'], {
+export const decryptAll = async (patterns: string) => {
+  const files = await glob(patterns.split(',').map(p =>p.endsWith('.encrypted') ? p : p + '.encrypted'), {
     onlyFiles: true,
   });
 
