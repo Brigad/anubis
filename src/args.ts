@@ -9,7 +9,8 @@ const usage = `
       ${'--config-pattern'.grey} | ${'-p'.grey} | ${
   '$ANUBIS_CONFIG_PATTERN'.grey
 } - configuration files pattern (eg: ./packages/**/**.config.ts)
-      ${'--aws-kms-key-id'.grey} | ${'-k'.grey} | ${'$ANUBIS_AWS_KMS_KEY_ID'.grey} - AWS KMS key ID (arn:aws:kms:...)
+      ${'--aws-kms-key-id'.grey} | ${'-k'.grey} | ${'$ANUBIS_AWS_KMS_KEY_ID'.grey} - AWS KMS key ID (eg: arn:aws:kms:...)
+      ${'--git_ignore_path'.grey} | ${'-g'.grey} | ${'$GIT_IGNORE_PATH'.grey} - git ignore path where to add encrypted files (eg: ./.gitignore)
 
   ${'decrypt'.green} : decrypt all encrypted config files
       ${'--config-pattern'.grey} | ${'-p'.grey} | ${
@@ -51,6 +52,7 @@ const argsDef: commandArgs.OptionDefinition[] = [
   { name: 'config-pattern', alias: 'p', type: String },
   { name: 'config-file', alias: 'f', type: String },
   { name: 'aws-kms-key-id', alias: 'k', type: String },
+  { name: 'git_ignore_path', alias: 'g', type: String },
   { name: 'action', alias: 'a', type: String, defaultOption: true },
 ];
 
@@ -93,6 +95,12 @@ if (options.action !== 'diff-file') {
       missingOption('aws-kms-key-id')
     }
     args.push(key);
+
+    const git_ignore_path = options['git_ignore_path'] || process.env.GIT_IGNORE_PATH;
+    
+    if (git_ignore_path) {
+      args.push(git_ignore_path);
+    }
   }
 } else {
   const file = options['config-file'];

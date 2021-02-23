@@ -7,6 +7,7 @@ import { AES_ALGORITHM } from './config';
 
 import { decryptFile } from './decrypt';
 import glob from 'fast-glob';
+import { addToGitignore } from './clean-github';
 
 export const encryptFile = async (file: string, keyId: string) => {
 
@@ -16,7 +17,7 @@ export const encryptFile = async (file: string, keyId: string) => {
     const decryptedContent = await decryptFile(`${file}.encrypted`, true);
 
     if (content.toString() === decryptedContent) {
-      return null;
+      return [file, false];
     }
   } catch { }
   const key = Buffer.from(crypto.randomBytes(32));
@@ -41,16 +42,23 @@ export const encryptFile = async (file: string, keyId: string) => {
       iv: iv.toString('hex'),
     }),
   );
-  return file;
+  return [file, true];
 };
 
-export const encryptAll = async (patterns: string, keyId: string) => {
+export const encryptAll = async (patterns: string, keyId: string, gitIgnorePath?: string) => {
   const files = await glob(patterns.split(',').map(p => p.endsWith('.encrypted') ? p.replace(/\.encrypted$/, '') : p), {
     onlyFiles: true,
   });
 
-  const encrypted = (await Promise.all(files.map(f => encryptFile(f, keyId)))).filter((e) => !!e);
+  const allConfigFiles = (await Promise.all(files.map(f => encryptFile(f, keyId))));
 
-  encrypted.map((e) => console.log(`=> ${e}`));
-  console.log(`\nEncrypted ${`${encrypted.length}`.green} / ${`${files.length}`.green} files.`);
+  const encrypted = allConfigFiles.filter(e => !!e[1]);
+
+  encrypted.map((e) => console.log(`=> ${e[0]}`));
+
+  console.log(`\nEncrypted ${`${encrypted.length}`.green} / ${`${allConfigFiles.length}`.green} files.`);
+
+  if (gitIgnorePath) {
+    addToGitignore(gitIgnorePath, allConfigFiles.map(f => f[0]) as string[]);
+  }
 };
