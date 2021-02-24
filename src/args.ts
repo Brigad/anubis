@@ -12,7 +12,7 @@ const usage = `
 } - configuration files pattern (eg: ./packages/**/**.config.ts)
       ${'--aws-kms-key-id'.grey} | ${'-k'.grey} | ${'$ANUBIS_AWS_KMS_KEY_ID'.grey} - AWS KMS key ID (eg: arn:aws:kms:...)
       ${'--git_ignore_path'.grey} | ${'-g'.grey} | ${'$GIT_IGNORE_PATH'.grey} - git ignore path where to add encrypted files (eg: ./.gitignore)
-      ${'--remove_encrypted'.grey} - remove encrypted files
+      ${'--clean'.grey} | ${'-c'.grey} - clean encrypted files
 
   ${'decrypt'.green} : decrypt all encrypted config files
       ${'--config-pattern'.grey} | ${'-p'.grey} | ${
@@ -55,7 +55,7 @@ const argsDef: commandArgs.OptionDefinition[] = [
   { name: 'config-file', alias: 'f', type: String },
   { name: 'aws-kms-key-id', alias: 'k', type: String },
   { name: 'git_ignore_path', alias: 'g', type: String },
-  { name: 'remove_encrypted', type: Boolean, defaultValue: false },
+  { name: 'clean', alias: 'c', type: Boolean, defaultValue: false },
   { name: 'action', alias: 'a', type: String, defaultOption: true },
 ];
 
@@ -99,9 +99,9 @@ if (options.action !== 'diff-file') {
     }
     args.push(key);
 
-    const remove_encrypted = options['remove_encrypted'];
+    const clean = options['clean'];
     
-    args.push(remove_encrypted);
+    args.push(clean);
 
     const git_ignore_path = options['git_ignore_path'] || process.env.GIT_IGNORE_PATH;
     

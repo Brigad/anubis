@@ -46,7 +46,7 @@ export const encryptFile = async (file: string, keyId: string) => {
   return [file, true];
 };
 
-export const encryptAll = async (patterns: string, keyId: string, shouldRemoveEncrypted: boolean, gitIgnorePath?: string) => {
+export const encryptAll = async (patterns: string, keyId: string, clean: boolean, gitIgnorePath?: string) => {
   const {orignialFiles, newFiles, encryptedFiles} = await getFiles(patterns);
 
   const allConfigFiles = (await Promise.all(orignialFiles.map(f => encryptFile(f, keyId))));
@@ -61,7 +61,7 @@ export const encryptAll = async (patterns: string, keyId: string, shouldRemoveEn
     addToGitignore(gitIgnorePath, allConfigFiles.map(f => f[0]) as string[]);
   }
 
-  if (shouldRemoveEncrypted) {
+  if (clean) {
     await removeEncrypted(orignialFiles);
   }
 };
