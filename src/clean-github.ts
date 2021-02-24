@@ -4,7 +4,7 @@ const startSymbol = '## <anubis> ##';
 const endSymbol = '## </anubis> ##';
 
 export const addToGitignore = (gitIgnorePath: string, paths: string[]) => {
-    const newContent =  `${startSymbol}\n${paths.join('\n')}\n${endSymbol}\n`;
+    const newContent =  `${startSymbol}\n${paths.sort().join('\n')}\n${endSymbol}\n`;
 
     let gitignore: string;
 
