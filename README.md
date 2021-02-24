@@ -1,4 +1,4 @@
-# Anubis
+# Anubis [![Build](https://github.com/Brigad/anubis/actions/workflows/build.yml/badge.svg)](https://github.com/Brigad/anubis/actions/workflows/build.yml)
 
 Encryption tools using AWS KSM
 
