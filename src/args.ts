@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import commandArgs from 'command-line-args';
 import 'colors';
+import glob from 'fast-glob';
 
 const usage = `
   ${'anubis'.green}
@@ -11,6 +12,7 @@ const usage = `
 } - configuration files pattern (eg: ./packages/**/**.config.ts)
       ${'--aws-kms-key-id'.grey} | ${'-k'.grey} | ${'$ANUBIS_AWS_KMS_KEY_ID'.grey} - AWS KMS key ID (eg: arn:aws:kms:...)
       ${'--git_ignore_path'.grey} | ${'-g'.grey} | ${'$GIT_IGNORE_PATH'.grey} - git ignore path where to add encrypted files (eg: ./.gitignore)
+      ${'--remove_encrypted'.grey} - remove encrypted files
 
   ${'decrypt'.green} : decrypt all encrypted config files
       ${'--config-pattern'.grey} | ${'-p'.grey} | ${
@@ -53,6 +55,7 @@ const argsDef: commandArgs.OptionDefinition[] = [
   { name: 'config-file', alias: 'f', type: String },
   { name: 'aws-kms-key-id', alias: 'k', type: String },
   { name: 'git_ignore_path', alias: 'g', type: String },
+  { name: 'remove_encrypted', type: Boolean, defaultValue: false },
   { name: 'action', alias: 'a', type: String, defaultOption: true },
 ];
 
@@ -83,7 +86,7 @@ if (options.action !== 'diff-file') {
   const config = options['config-pattern'] || process.env.ANUBIS_CONFIG_PATTERN;
     
   if (!config) {
-    missingOption('config-pattern')
+    missingOption('config-pattern');
   }
 
   args.push(config);
@@ -92,9 +95,13 @@ if (options.action !== 'diff-file') {
     const key = options['aws-kms-key-id'] || process.env.ANUBIS_AWS_KMS_KEY_ID;
     
     if (!key) {
-      missingOption('aws-kms-key-id')
+      missingOption('aws-kms-key-id');
     }
     args.push(key);
+
+    const remove_encrypted = options['remove_encrypted'];
+    
+    args.push(remove_encrypted);
 
     const git_ignore_path = options['git_ignore_path'] || process.env.GIT_IGNORE_PATH;
     
@@ -106,9 +113,25 @@ if (options.action !== 'diff-file') {
   const file = options['config-file'];
     
   if (!file) {
-    missingOption('config-file')
+    missingOption('config-file');
   }
   args.push(file);
 }
 
-export { args };
+const getFiles = async (patterns: string) => {
+  const encryptedFiles = await glob(patterns.split(',').map(p => p.endsWith('.encrypted') ? p : p + '.encrypted'), {
+    onlyFiles: true,
+  });
+  const orignialFiles = await glob(patterns.split(',').map(p =>
+    p.endsWith('.encrypted') ? p.replace(/\.encrypted$/, '') : p)
+  , {
+    onlyFiles: true,
+  });
+
+  const newFiles = orignialFiles.filter(f => !encryptedFiles.includes(`${f}.encrypted`));
+  const alreadyEncryptedFilesWithOriginales = orignialFiles.filter(f => encryptedFiles.includes(`${f}.encrypted`));
+
+  return { encryptedFiles, orignialFiles, newFiles, alreadyEncryptedFilesWithOriginales };
+} 
+
+export { args, getFiles };

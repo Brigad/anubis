@@ -1,7 +1,7 @@
 import { diffChars } from 'diff';
 import { decryptFile } from './decrypt';
 import fs from 'fs';
-import glob from 'fast-glob';
+import { getFiles } from './args';
 
 const printDiff = (contentA, contentB) => {
   const diff = diffChars(contentA, contentB);
@@ -59,15 +59,9 @@ export const diffFile = async (file, writeOutput = true) => {
 };
 
 export const diffList = async (patterns: string) => {
-  const encryptedFiles = await glob(patterns.split(',').map(p => p.endsWith('.encrypted') ? p : p + '.encrypted'), {
-    onlyFiles: true,
-  });
-  const files = await glob(patterns.split(',').map(p =>
-    p.endsWith('.encrypted') ? p.replace(/\.encrypted$/, '') : p)
-  , {
-    onlyFiles: true,
-  });
-  const toEncryptFiles = files.filter((f) => !encryptedFiles.includes(`${f}.encrypted`));
+  const {encryptedFiles, orignialFiles} = await getFiles(patterns);
+
+  const toEncryptFiles = orignialFiles.filter((f) => !encryptedFiles.includes(`${f}.encrypted`));
 
   const diff = (await Promise.all(encryptedFiles.map((f) => diffFile(f, false)))).filter((e) => !!e);
 

@@ -3,8 +3,8 @@ import { decrypt } from 'aws-kms-thingy';
 import crypto from 'crypto';
 
 import fs from 'fs';
+import { getFiles } from './args';
 import { AES_ALGORITHM } from './config';
-import glob from 'fast-glob';
 
 export const decryptFile = async (file: string, returnContent = false) => {
   const content = JSON.parse(fs.readFileSync(file).toString());
@@ -42,12 +42,10 @@ export const decryptFile = async (file: string, returnContent = false) => {
 };
 
 export const decryptAll = async (patterns: string) => {
-  const files = await glob(patterns.split(',').map(p =>p.endsWith('.encrypted') ? p : p + '.encrypted'), {
-    onlyFiles: true,
-  });
+  const {encryptedFiles} = await getFiles(patterns);
 
-  const decrypted = (await Promise.all(files.map((f) => decryptFile(f)))).filter((e) => !!e);
+  const decrypted = (await Promise.all(encryptedFiles.map((f) => decryptFile(f)))).filter((e) => !!e);
 
   decrypted.map((e) => console.log(`=> ${e}`));
-  console.log(`\nDecrypted ${`${decrypted.length}`.green} / ${`${files.length}`.green} files.`);
+  console.log(`\nDecrypted ${`${decrypted.length}`.green} / ${`${encryptedFiles.length}`.green} files.`);
 };
