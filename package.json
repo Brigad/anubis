@@ -1,41 +1,38 @@
 {
   "name": "@brigad/anubis",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "encryption tool using AWS KMS",
   "main": "lib/index.js",
   "scripts": {
-    "build": "yarn && ncc build src/main.ts --minify --out lib",
+    "build": "ncc build src/main.ts --minify --out lib --target es2021",
+    "prepare": "echo \"Error: build, then publish from lib\" && exit 1",
     "watch": "ncc build src/main.ts --watch --out lib",
     "lint": "eslint ./src --ext ts && echo 'Lint complete.'",
     "lint:fix": "eslint ./src --ext ts --fix && echo \"Lint & fix complete.\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Grisha Ghukasyan <grishjan@gmail.com>",
+  "contributors": ["Thibault Malbranche <thibault@brigad.co>"],
   "bin": {
     "anubis": "lib/index.js"
   },
-  "files": [
-    "lib",
-    "package.json"
-  ],
   "dependencies": {
-    "aws-kms-thingy": "^2.0.0",
-    "aws-sdk": "^2.828.0",
+    "@aws-sdk/client-kms": "^3.100.0",
     "colors": "^1.4.0",
-    "command-line-args": "^5.1.1",
-    "diff": "^5.0.0",
-    "fast-glob": "3.2.4",
-    "yesno": "^0.3.1"
+    "command-line-args": "^5.2.1",
+    "diff": "^5.1.0",
+    "fast-glob": "3.2.12",
+    "yesno": "^0.4.0"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.0.0",
     "@types/diff": "^5.0.0",
     "@types/lodash": "^4.14.161",
-    "@types/node": "^12.12.14",
-    "@typescript-eslint/eslint-plugin": "^2.13.0",
-    "@typescript-eslint/parser": "^2.13.0",
-    "@zeit/ncc": "^0.22.1",
-    "eslint": "^6.8.0",
-    "typescript": "^3.7.3"
+    "@types/node": "^16.8.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "@vercel/ncc": "0.36.0",
+    "eslint": "^8.29.0",
+    "typescript": "^4.9.4"
   }
 }

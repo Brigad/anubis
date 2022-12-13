@@ -1,19 +1,21 @@
-import { decrypt } from 'aws-kms-thingy';
-
 import crypto from 'crypto';
-
+import { DecryptCommand, KMSClient } from '@aws-sdk/client-kms';
 import fs from 'fs';
 import { getFiles } from './args';
 import { AES_ALGORITHM } from './config';
 
+const kms = new KMSClient({});
+const kmsDecrypt = async (ciphertext: string) => {
+  const result = await kms.send(new DecryptCommand({CiphertextBlob: Buffer.from(ciphertext, 'base64')}));
+  return result.Plaintext ? Buffer.from(result.Plaintext).toString('ascii') : ciphertext;
+}
+
 export const decryptFile = async (file: string, returnContent = false) => {
   const content = JSON.parse(fs.readFileSync(file).toString());
-
-  const decrypted = await decrypt(content.key as string);
+  const decrypted = await kmsDecrypt(content.key);
 
   const key = Buffer.from(decrypted, 'hex');
   const iv = Buffer.from(content.iv, 'hex');
-
   const aes = crypto.createDecipheriv(AES_ALGORITHM, key, iv);
 
   const buffer = aes.update(Buffer.from(content.data, 'hex'));
