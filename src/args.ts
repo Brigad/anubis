@@ -64,7 +64,7 @@ let foundOptions: commandArgs.CommandLineOptions;
 try {
   foundOptions = commandArgs(argsDef);
 } catch (err) {
-  errorOption(err.message);
+  errorOption((err as {message: string})?.message);
   process.exit(1);
 }
 
@@ -84,7 +84,7 @@ const args = [options.action];
 
 if (options.action !== 'diff-file') {
   const config = options['config-pattern'] || process.env.ANUBIS_CONFIG_PATTERN;
-    
+
   if (!config) {
     missingOption('config-pattern');
   }
@@ -93,25 +93,25 @@ if (options.action !== 'diff-file') {
 
   if (options.action === 'encrypt') {
     const key = options['aws-kms-key-id'] || process.env.ANUBIS_AWS_KMS_KEY_ID;
-    
+
     if (!key) {
       missingOption('aws-kms-key-id');
     }
     args.push(key);
 
     const clean = options['clean'];
-    
+
     args.push(clean);
 
     const git_ignore_path = options['git_ignore_path'] || process.env.GIT_IGNORE_PATH;
-    
+
     if (git_ignore_path) {
       args.push(git_ignore_path);
     }
   }
 } else {
   const file = options['config-file'];
-    
+
   if (!file) {
     missingOption('config-file');
   }
@@ -132,6 +132,6 @@ const getFiles = async (patterns: string) => {
   const alreadyEncryptedFilesWithOriginales = orignialFiles.filter(f => encryptedFiles.includes(`${f}.encrypted`));
 
   return { encryptedFiles, orignialFiles, newFiles, alreadyEncryptedFilesWithOriginales };
-} 
+}
 
 export { args, getFiles };

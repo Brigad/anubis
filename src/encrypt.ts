@@ -1,6 +1,5 @@
-import { encrypt } from 'aws-kms-thingy';
-
 import crypto from 'crypto';
+import { EncryptCommand, KMSClient } from '@aws-sdk/client-kms';
 
 import fs from 'fs';
 import { AES_ALGORITHM } from './config';
@@ -9,6 +8,8 @@ import { decryptFile } from './decrypt';
 import { addToGitignore } from './gitignore';
 import { getFiles } from './args';
 import { removeEncrypted } from './remove';
+
+const kms = new KMSClient({});
 
 export const encryptFile = async (file: string, keyId: string) => {
 
@@ -26,10 +27,7 @@ export const encryptFile = async (file: string, keyId: string) => {
 
   const aes = crypto.createCipheriv(AES_ALGORITHM, key, iv);
 
-  const encryptedKey = await encrypt({
-    plaintext: key.toString('hex'),
-    keyId,
-  });
+  const encryptedKey = await kms.send(new EncryptCommand({Plaintext: Buffer.from(key.toString('hex')), KeyId: keyId}))
 
   const buffer = aes.update(content.toString());
 
@@ -39,7 +37,7 @@ export const encryptFile = async (file: string, keyId: string) => {
     `${file}.encrypted`,
     JSON.stringify({
       data: buffer.toString('hex'),
-      key: encryptedKey,
+      key: Buffer.from(encryptedKey.CiphertextBlob!).toString('base64'),
       iv: iv.toString('hex'),
     }),
   );
