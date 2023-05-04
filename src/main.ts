@@ -2,7 +2,7 @@
 
 import { args } from './args';
 import { decryptAll } from './decrypt';
-import { diffFile, diffList } from './diff';
+import { compareEncryptedFiles, diffFile, diffList } from './diff';
 import { encryptAll } from './encrypt';
 
 const actions = {
@@ -10,6 +10,7 @@ const actions = {
   encrypt: encryptAll,
   'diff-list': diffList,
   'diff-file': diffFile,
+  'compare-encrypted-files': compareEncryptedFiles,
 };
 
 const main = async () => {

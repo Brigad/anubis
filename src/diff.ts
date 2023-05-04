@@ -2,6 +2,7 @@ import { diffChars } from 'diff';
 import { decryptFile } from './decrypt';
 import fs from 'fs';
 import { getFiles } from './args';
+import { getObjectDiff } from './utils';
 
 const printDiff = (contentA, contentB) => {
   const diff = diffChars(contentA, contentB);
@@ -71,4 +72,39 @@ export const diffList = async (patterns: string) => {
   console.log(
     `\nFound differences on ${diff.length} / ${encryptedFiles.length} files and ${toEncryptFiles.length} new file to encrypt`,
   );
+};
+
+export const compareEncryptedFiles = async (originalFile, fileToCompare) => {
+  if (!originalFile.endsWith(".encrypted")) {
+    originalFile = originalFile + ".encrypted";
+  }
+  if (!fileToCompare.endsWith(".encrypted")) {
+    fileToCompare = fileToCompare + ".encrypted";
+  }
+
+  console.log(originalFile, fileToCompare);
+
+  let decryptedOriginal: string | null = null;
+  let decryptedToCompare: string | null = null;
+  try {
+    decryptedOriginal = await decryptFile(originalFile, true);
+    decryptedToCompare = await decryptFile(fileToCompare, true);
+  } catch {}
+
+  if (!decryptedOriginal) {
+    console.log("\nSrc not found".red);
+    return null;
+  }
+
+  if (!decryptedToCompare) {
+    console.log("\nDest not found".red);
+    return null;
+  }
+
+  const decryptedContentAsJSON = eval(decryptedOriginal);
+  const existingContentAsJSON = eval(decryptedToCompare);
+
+  const diff = getObjectDiff(existingContentAsJSON, decryptedContentAsJSON);
+  console.log(diff);
+  return originalFile;
 };

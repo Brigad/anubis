@@ -21,6 +21,10 @@ Encryption tools using AWS KSM
 
   diff-file : displays the differences between the encrypted and the original file
       --config-file | -f - configuration file path (eg ./packages/app/production.config.ts[.encrypted])
+
+  compare-encrypted-files : compare two encrypted files and shows the differences (keys removed, added, changed)
+      --src | -s - source encrypted file
+      --dest | -d - destination encrypted file
 ```
 
 
