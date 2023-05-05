@@ -29,6 +29,10 @@ const usage = `
   '-f'.grey
 } - configuration file path (eg ./packages/app/production.config.ts[.encrypted])
 
+  ${'compare-encrypted-files'.green} : compare two encrypted files and shows the differences (keys removed, added, changed)
+      ${'--src'.grey} | ${'-s'.grey} - source encrypted file
+      ${'--dest'.grey} | ${'-d'.grey} - destination encrypted file
+
   ${'help'.green} : print this usage
 `;
 
@@ -57,6 +61,8 @@ const argsDef: commandArgs.OptionDefinition[] = [
   { name: 'git_ignore_path', alias: 'g', type: String },
   { name: 'clean', alias: 'c', type: Boolean, defaultValue: false },
   { name: 'action', alias: 'a', type: String, defaultOption: true },
+  { name: 'src', alias: 's', type: String },
+  { name: 'dest', alias: 'd', type: String },
 ];
 
 let foundOptions: commandArgs.CommandLineOptions;
@@ -76,13 +82,13 @@ if (!options.action || options.action === 'help') {
   process.exit(0);
 }
 
-if (!['encrypt', 'decrypt', 'help', 'diff-file', 'diff-list'].includes(options.action)) {
+if (!['encrypt', 'decrypt', 'help', 'diff-file', 'diff-list', 'compare-encrypted-files'].includes(options.action)) {
   errorOption('invalid command');
 }
 
 const args = [options.action];
 
-if (options.action !== 'diff-file') {
+if (['encrypt', 'decrypt', 'help', 'diff-list'].includes(options.action)) {
   const config = options['config-pattern'] || process.env.ANUBIS_CONFIG_PATTERN;
 
   if (!config) {
@@ -109,13 +115,27 @@ if (options.action !== 'diff-file') {
       args.push(git_ignore_path);
     }
   }
-} else {
+} else if (['diff-file'].includes(options.action)) {
   const file = options['config-file'];
 
   if (!file) {
     missingOption('config-file');
   }
   args.push(file);
+} else if (['compare-encrypted-files'].includes(options.action)) {
+  const src = options['src'];
+
+  if (!src) {
+    missingOption('src');
+  }
+  args.push(src);
+
+  const dest = options['dest'];
+
+  if (!dest) {
+    missingOption('dest');
+  }
+  args.push(dest);
 }
 
 const getFiles = async (patterns: string) => {
